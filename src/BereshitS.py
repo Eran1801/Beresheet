@@ -59,3 +59,32 @@ class Bershit:
         t += self.MAIN_ENG_F
         t += seconds * self.SECOND_ENG_F
         return t / weight
+    
+        def engine_power(self) -> float:
+        """returns all engines power combined"""
+        sum = 0
+        for engine in self.engines:
+            sum += engine.power
+        return sum
+
+    def update_engines(self):
+        """update all engines power"""
+        if self.alt < 2000 and self.ang > 0:
+            for i in range(8):
+                if i == 1 or i == 5:
+                    self.engines[i].power = 0.5
+
+                elif i == 6 or i == 7:
+                    self.engines[i].power = 1
+
+                else:
+                    self.engines[i].power = 0
+
+            self.ang -= self.engine_power() * self.dt
+
+            if self.ang < 1:
+                self.ang = 0
+
+    def timer(self) -> None:
+        """update time"""
+        self.time += self.dt
