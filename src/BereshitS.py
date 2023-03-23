@@ -88,3 +88,31 @@ class Bershit:
     def timer(self) -> None:
         """update time"""
         self.time += self.dt
+        
+        def location_update(self) -> None:
+        self.alt = (self.alt - self.dt * self.vs)  # Y
+        self.lat = (self.lat + self.dt * self.hs)  # X
+        self.dist = (Point(self.lat, self.alt).distance(Moon.real_dest_point))
+
+    def speed_control(self, h_acc: float, v_acc):
+        if self.hs > 0:
+            self.hs = 0.1 if self.hs - h_acc * self.dt < 0 else self.hs - h_acc * self.dt
+
+        if self.hs < 2 and self.alt <= 2000:
+            self.hs = 0
+
+        self.vs = 0.4 if self.vs - v_acc * self.dt < 2 else self.vs - v_acc * self.dt
+
+        if self.alt < 15 and self.vs > 2:
+            self.vs = 0.3 if self.vs - 2 < 2 else self.vs - 2
+
+    def fuel_control(self) -> None:
+        diff_in_weight = self.dt * self.ALL_BURN * self.NN  # difference in weight
+
+        if self.fuel > 0:
+            self.fuel -= diff_in_weight  # update fuel
+            self.weight = self.WEIGHT_EMP + self.fuel  # update weight
+            self.acc = self.NN * self.accMax(self.weight)  # update acceleration
+        else:
+            self.acc = 0
+
