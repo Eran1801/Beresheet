@@ -142,5 +142,35 @@ class Bershit:
 
                 if self.vs < 5:
                     self.NN = 0.7
+    def desired_hs(self, alt: float) -> float:
+        min_alt = 2000  # 2KM
+        max_alt = 30000  # 30KM
+
+        if alt < min_alt:
+            return 0
+
+        if alt > max_alt:
+            return Moon.EQ_SPEED
+
+        norm = (alt - min_alt) / (max_alt - min_alt)  # normalize
+        norm = math.pow(norm, 0.70)
+        return norm * Moon.EQ_SPEED
+
+    def desired_vs(self, alt: float) -> float:
+        max_alt = 30000  # 30KM
+
+        if alt > max_alt:
+            return 0
+
+        if alt > 1000:
+            return 23
+
+        if alt > 500:
+            return 13 + 10 * (alt - 500) / 500
+
+        if alt > 70:
+            return 5 + 8 * (alt - 70) / 430
+    
+
 
 
