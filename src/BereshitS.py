@@ -115,4 +115,32 @@ class Bershit:
             self.acc = self.NN * self.accMax(self.weight)  # update acceleration
         else:
             self.acc = 0
+            
+    def constraint(self, x: float) -> float:
+        x = 1 if x > 1 else x
+        return 0 if x < 0 else x
+
+    def NNControl(self):
+        if self.alt > 2000:  # 2KM
+            if self.vs > 25:
+                self.NN = self.constraint(self.NN + 0.003 * self.dt)
+
+            if self.vs < 20:
+                self.NN = self.constraint(self.NN - 0.003 * self.dt)
+
+        else:
+            self.NN = self.constraint(self.pid.control(self.dt, 0.5 - self.NN))
+
+            if self.alt < 5:
+                self.NN = 0.4
+
+            if self.alt < 4:
+                self.NN = 0
+
+            elif self.alt < 125:
+                self.NN = 1
+
+                if self.vs < 5:
+                    self.NN = 0.7
+
 
