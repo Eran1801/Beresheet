@@ -60,7 +60,7 @@ class Bershit:
         t += seconds * self.SECOND_ENG_F
         return t / weight
     
-        def engine_power(self) -> float:
+    def engine_power(self) -> float:
         """returns all engines power combined"""
         sum = 0
         for engine in self.engines:
@@ -89,7 +89,7 @@ class Bershit:
         """update time"""
         self.time += self.dt
         
-        def location_update(self) -> None:
+    def location_update(self) -> None:
         self.alt = (self.alt - self.dt * self.vs)  # Y
         self.lat = (self.lat + self.dt * self.hs)  # X
         self.dist = (Point(self.lat, self.alt).distance(Moon.real_dest_point))
