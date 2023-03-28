@@ -1,6 +1,6 @@
 class PID:
 
-    def _init_(self, P: float, I: float, D: float, max: int, min: int):
+    def __init__(self, P: float, I: float, D: float, max: int, min: int):
         """
 
         :param P: This variable determines the proportion of the error that should be applied to the output of the PID controller
