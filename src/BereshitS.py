@@ -1,8 +1,11 @@
+import math
+
 import pandas
 import Moon
 from Engines import Engines
 from PID import PID
 from Point import Point
+
 
 class Bershit:
     def __init__(self):
@@ -18,7 +21,7 @@ class Bershit:
 
         # ---- VARIABLES ----
         self.vs = 24.8  # vertical speed
-        self.hs = 932  # horizontal speed
+        self.hs = 932 # horizontal speed
         self.ang = 58.3  # angle
         self.alt = 13748  # 30 km
         self.lat = 0
@@ -39,10 +42,12 @@ class Bershit:
 
     def creating_excel(self) -> pandas.DataFrame:
         # Create an Excel file
-        writer = pandas.ExcelWriter('../../Spacex1/Results.xlsx', engine='xlsxwriter')
+        writer = pandas.ExcelWriter('Results.xlsx', engine='xlsxwriter')
 
         # Set the column names
-        data = {'TIME': [], 'VS': [], 'HS': [], 'DIST': [], 'ALT': [], 'ANG': [], 'WEIGHT': [], 'ACC - z': [],
+        data = {'TIME': [], 'NN': [], 'VS': [], 'DVS': [], 'HS': [], 'DHS': [], 'DIST': [], 'ALT': [], 'ANG': [],
+                'WEIGHT': [],
+                'ACC - z': [],
                 'FUEL': []}
 
         # Convert the dataframe to an XlsxWriter Excel object.
@@ -59,7 +64,7 @@ class Bershit:
         t += self.MAIN_ENG_F
         t += seconds * self.SECOND_ENG_F
         return t / weight
-    
+
     def engine_power(self) -> float:
         """returns all engines power combined"""
         sum = 0
@@ -88,7 +93,7 @@ class Bershit:
     def timer(self) -> None:
         """update time"""
         self.time += self.dt
-        
+
     def location_update(self) -> None:
         self.alt = (self.alt - self.dt * self.vs)  # Y
         self.lat = (self.lat + self.dt * self.hs)  # X
@@ -115,7 +120,7 @@ class Bershit:
             self.acc = self.NN * self.accMax(self.weight)  # update acceleration
         else:
             self.acc = 0
-            
+
     def constraint(self, x: float) -> float:
         x = 1 if x > 1 else x
         return 0 if x < 0 else x
@@ -142,6 +147,7 @@ class Bershit:
 
                 if self.vs < 5:
                     self.NN = 0.7
+
     def desired_hs(self, alt: float) -> float:
         min_alt = 2000  # 2KM
         max_alt = 30000  # 30KM
@@ -170,7 +176,3 @@ class Bershit:
 
         if alt > 70:
             return 5 + 8 * (alt - 70) / 430
-    
-
-
-
