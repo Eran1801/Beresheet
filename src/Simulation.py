@@ -5,7 +5,7 @@ import Moon
 
 class Simulation:
 
-    def _init_(self):
+    def __init__(self):
         self.bs = BershitS.Bershit()  # create a new instance of the Bershit class
         self.x = int(self.bs.location.x)  # get the x coordinate of the location
         self.y = int(self.bs.location.y)  # get the y coordinate of the location
@@ -47,8 +47,26 @@ class Simulation:
 
                 excel_index += 1
 
+            self.bs.NNControl()  # Update the NN value according to the 'vs' and the 'alt' variables
+            self.bs.update_engines()  # Update the 8 small engines according to the 'alt' and the 'ang' variables
+
+            dvs = self.bs.desired_vs(self.bs.alt)
+            dhs = self.bs.desired_hs(self.bs.alt)
+
+            ang_rad = math.radians(self.bs.ang)  # Convert the angle to radians
+            h_acc = math.sin(ang_rad) * self.bs.acc  # Calculate the horizontal acceleration
+            v_acc = math.cos(ang_rad) * self.bs.acc  # Calculate the vertical acceleration
+            vacc = Moon.getAcc(self.bs.hs)  # Calculate the vertical acceleration of the moon
+
+            self.bs.timer()  # Update the time
+            self.bs.fuel_control()
+            v_acc -= vacc  # Calculate the vertical acceleration of the moon
+            self.bs.speed_control(h_acc,
+                                  v_acc)  # Update the speed according to the horizontal and vertical acceleration
+            self.bs.location_update()
+
         output_excel.to_excel("Results.xlsx", index=False)  # save the Excel file
 
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     Simulation()
