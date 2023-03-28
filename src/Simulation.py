@@ -1,12 +1,12 @@
 import math
-import BershitS
+import BereshitS
 import Moon
 
 
 class Simulation:
 
     def __init__(self):
-        self.bs = BershitS.Bershit()  # create a new instance of the Bershit class
+        self.bs = BereshitS.Bershit()  # create a new instance of the Bershit class
         self.x = int(self.bs.location.x)  # get the x coordinate of the location
         self.y = int(self.bs.location.y)  # get the y coordinate of the location
         self.lastALT = 0.0
